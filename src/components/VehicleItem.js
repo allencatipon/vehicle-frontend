@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import VehicleService from "../services/VehicleService";
-import VehiclesFilter from "./VehiclesFilter";
 
-const VehicleComponent = (props) => {
-  const [filteredVehicle, setFilteredVehicle] = useState("Honda");
+import './VehicleItem.css';
+
+const VehicleItem = (props) => {
   const [vehicle, setVehicle] = useState([]);
   useEffect(() => {
     VehicleService.getVehicle().then((response) => {
@@ -11,13 +11,8 @@ const VehicleComponent = (props) => {
     });
   }, []);
 
-  const filterChangeHandler = selectedVehicle => {
-    setFilteredVehicle(selectedVehicle);
-  };
-
   return (
-    <div>
-      <h1 className="text-center"> Vehicle List</h1>
+    <div className='vehicle-item'>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -40,6 +35,6 @@ const VehicleComponent = (props) => {
       </table>
     </div>
   );
-};
+}
 
-export default VehicleComponent;
+export default VehicleItem;
