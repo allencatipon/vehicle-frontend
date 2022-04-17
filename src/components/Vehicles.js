@@ -12,7 +12,7 @@ const Vehicles = (props) => {
     <div>
       <h1 className="text-center"> Vehicle List</h1>
       <VehiclesFilter selected={filteredVehicle} onChangeFilter={filterChangeHandler} />
-      <VehicleItem></VehicleItem>
+      <VehicleItem/>
     </div>
   );
 };
