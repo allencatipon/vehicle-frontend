@@ -28,18 +28,17 @@ const VehiclesFilter = (props) => {
   };
 
   return (
-    <form onSubmit={searchHandler}>
       <div className='vehicles-filter'>
         <select value={props.selected} onChange={filterByChangeHandler}>
             <option value="" selected disabled hidden>Filter By</option>
-            <option value='Honda'>Honda</option>
-            <option value='Ducati'>Ducati</option>
-            <option value='Aprilla'>Aprilla</option>
+            <option value='Variant'>Variant</option>
+            <option value='Brand'>Brand</option>
+            <option value='Color'>Color</option>
+            <option value='Engine Capacity'>Engine Capacity (cc)</option>
           </select>
           <input type="text" id ="searchValue" onChange={searchTextChangeHandler} / >
-          <Button type='submit'>Search</Button>
+          <Button onClick={searchHandler}>Search</Button>
       </div>
-    </form>
   );
 };
 

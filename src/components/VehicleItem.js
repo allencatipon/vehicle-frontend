@@ -17,17 +17,17 @@ const VehicleItem = (props) => {
         <thead>
           <tr>
             <td> Id</td>
+            <td> Brand</td>
             <td> Color Name</td>
-            <td> Make Name</td>
-            <td> Displacement</td>
+            <td> Engine Capacity (cc)</td>
           </tr>
         </thead>
         <tbody>
           {vehicle.map((motor) => (
             <tr key={motor.id}>
               <td> {motor.id}</td>
-              <td> {motor.color}</td>
               <td> {motor.make}</td>
+              <td> {motor.color}</td>
               <td> {motor.displacement}</td>
             </tr>
           ))}
