@@ -10,7 +10,7 @@ const VehiclesFilter = (props) => {
   });
 
   const filterByChangeHandler = (event) => {
-    props.onChangeFilter(event.target.value);
+    // props.onChangeFilter(event.target.value);
     setSearchValue((prevState) => {
       return { ...prevState, selectedFilter: event.target.value };
     });
@@ -24,7 +24,8 @@ const VehiclesFilter = (props) => {
 
   const searchHandler = (event) => {
     event.preventDefault();
-    console.log(searchValue);
+    props.onGetSearchValue(searchValue);
+    // console.log(searchValue);
   };
 
   return (

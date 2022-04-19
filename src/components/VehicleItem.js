@@ -4,12 +4,17 @@ import VehicleService from "../services/VehicleService";
 import './VehicleItem.css';
 
 const VehicleItem = (props) => {
-  const [vehicle, setVehicle] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
   useEffect(() => {
+    console.log(props);
     VehicleService.getVehicle().then((response) => {
-      setVehicle(response.data);
+      setVehicles(response.data);
     });
   }, []);
+
+  const filteredVehicles = vehicles.filter(vehicle => {
+    return vehicle.color === props.filterBy;
+  });
 
   return (
     <div className='vehicle-item'>
@@ -17,13 +22,14 @@ const VehicleItem = (props) => {
         <thead>
           <tr>
             <td> Id</td>
+            {/* <td> Variant</td> */}
             <td> Brand</td>
             <td> Color Name</td>
             <td> Engine Capacity (cc)</td>
           </tr>
         </thead>
         <tbody>
-          {vehicle.map((motor) => (
+          {filteredVehicles.length === 0 ? (<p>No vehicles found.</p>) : filteredVehicles.map((motor) => (
             <tr key={motor.id}>
               <td> {motor.id}</td>
               <td> {motor.make}</td>

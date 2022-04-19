@@ -5,24 +5,28 @@ import Button from "../ui/Button";
 import classes from "./Vehicles.module.css";
 
 const Vehicles = (props) => {
-  const [filteredVehicle, setFilteredVehicle] = useState([]);
-  const filterChangeHandler = selectedVehicle => {
-    setFilteredVehicle(selectedVehicle);
-  };
+  let searchValue = [];
 
   const [isShowFormModal, setIsShowFormModal] = useState(true);
   const errorHandler = () => {
 
   }
 
+  const getSearValueHandler = (enteredSearchValue) =>{
+    searchValue = {
+      ...enteredSearchValue, id: Math.random().toString()
+    };
+    console.log(searchValue);
+  }
+
   return (
     <div>
       <h1 className="text-center"> Vehicle List</h1>
       <div className={classes.wrapper}>
-        <VehiclesFilter selected={filteredVehicle} onChangeFilter={filterChangeHandler} />
+        <VehiclesFilter onGetSearchValue={getSearValueHandler}/>
         <Button>Add Vehicle</Button>
       </div>
-      <VehicleItem/>
+      <VehicleItem filterBy={searchValue} />
     </div>
   );
 };
