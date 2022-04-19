@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import VehicleItem from "./VehicleItem";
 import VehiclesFilter from "./VehiclesFilter";
+import ErrorModal from '../ui/ErrorModal';
 
 const Vehicles = (props) => {
   const [filteredVehicle, setFilteredVehicle] = useState([]);
   const filterChangeHandler = selectedVehicle => {
     setFilteredVehicle(selectedVehicle);
   };
+
+  const [isShowFormModal, setIsShowFormModal] = useState(true);
+  const errorHandler = () => {
+
+  }
 
   return (
     <div>
