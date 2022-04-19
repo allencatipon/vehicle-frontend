@@ -1,18 +1,11 @@
 .vehicles-filter {
-  color: white;
   padding: 0 1rem;
-}
-
-.vehicles-filter__control {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  margin: 1rem 0;
+  display: inline;
 }
 
 .vehicles-filter label {
   font-weight: bold;
+  margin-right: 10px;
   margin-bottom: 0.5rem;
 }
 
