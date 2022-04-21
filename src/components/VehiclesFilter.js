@@ -1,45 +1,57 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import VehicleService from '../shared/services/VehicleService';
 import Button from '../ui/Button';
-import VehicleItem from './VehicleItem';
 
 import './VehiclesFilter.css';
 
-const VehiclesFilter = (props) => {
-  const [searchValue, setSearchValue] = useState({
-    enteredText: '',
-    selectedFilter: ''
+const VehiclesFilter = ({ setFilteredVehicles, selected }) => {
+  const [search, setSearch] = useState({
+    searchBy: '',
+    searchValue: '',
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const filterByChangeHandler = (event) => {
-    // props.onChangeFilter(event.target.value);
-    setSearchValue((prevState) => {
-      return { ...prevState, selectedFilter: event.target.value };
+    setSearch((prevState) => {
+      return { ...prevState, searchBy: event.target.value };
     });
   };
 
   const searchTextChangeHandler = (event) => {
-    setSearchValue((prevState) => {
-      return { ...prevState, enteredText: event.target.value };
+    setSearch((prevState) => {
+      return { ...prevState, searchValue: event.target.value };
     });
   };
 
-  const searchHandler = (event) => {
-    event.preventDefault();
-    props.onGetSearchValue(searchValue);
+  const onClickSearch = async () => {
+    try {
+      setIsLoading(true);
+      const data = await VehicleService.getVehicle(search);
+      setFilteredVehicles(data || []);
+    } catch (err) {
+      // TODO: handle error here
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-      <div className='vehicles-filter'>
-        <select value={props.selected} onChange={filterByChangeHandler}>
-            <option value="" selected disabled hidden>Filter By</option>
-            <option value='Variant'>Variant</option>
-            <option value='Brand'>Brand</option>
-            <option value='Color'>Color</option>
-            <option value='Engine Capacity'>Engine Capacity (cc)</option>
-          </select>
-          <input type="text" id ="searchValue" onChange={searchTextChangeHandler} / >
-          <Button onClick={searchHandler}>Search</Button>
-      </div>
+    <div className="vehicles-filter">
+      <select value={selected} onChange={filterByChangeHandler}>
+        <option value="" selected disabled hidden>
+          Filter By
+        </option>
+        <option value="variant">Variant</option>
+        <option value="brand">Brand</option>
+        <option value="color">Color</option>
+        <option value="engineCapacity">Engine Capacity (cc)</option>
+      </select>
+      <input type="text" id="searchValue" onChange={searchTextChangeHandler} />
+      <Button disabled={isLoading} onClick={onClickSearch}>
+        {isLoading ? 'Loading' : 'Search'}
+      </Button>
+    </div>
   );
 };
 

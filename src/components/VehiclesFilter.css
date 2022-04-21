@@ -1,17 +1,17 @@
 .vehicles-filter {
-  padding: 0 1rem;
+  padding: 1rem 10rem;
   display: inline;
-}
-
-.vehicles-filter label {
-  font-weight: bold;
-  margin-right: 10px;
-  margin-bottom: 0.5rem;
 }
 
 .vehicles-filter select {
   font: inherit;
-  padding: 0.5rem 3rem;
+  padding: 0.3rem 1rem;
   font-weight: bold;
-  border-radius: 6px;
+}
+
+.vehicles-filter input {
+  font: inherit;
+  padding: 0.2rem 1rem;
+  border-radius: 2px;
+  margin-left: 5px;
 }

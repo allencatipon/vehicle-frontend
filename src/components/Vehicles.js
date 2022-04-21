@@ -1,32 +1,19 @@
-import React, { useState, useEffect } from "react";
-import VehicleItem from "./VehicleItem";
-import VehiclesFilter from "./VehiclesFilter";
-import Button from "../ui/Button";
-import classes from "./Vehicles.module.css";
+import React, { useState } from 'react';
+import VehicleItem from './VehicleItem';
+import VehiclesFilter from './VehiclesFilter';
+import Button from '../ui/Button';
+import classes from './Vehicles.module.css';
 
-const Vehicles = (props) => {
-  let searchValue = [];
-
-  const [isShowFormModal, setIsShowFormModal] = useState(true);
-  const errorHandler = () => {
-
-  }
-
-  const getSearValueHandler = (enteredSearchValue) =>{
-    searchValue = {
-      ...enteredSearchValue
-    };
-    console.log("Vehicles: ", searchValue);
-  }
-
+const Vehicles = () => {
+  const [filteredVehicles, setFilteredVehicles] = useState([]);
   return (
     <div>
       <h1 className="text-center"> Vehicle List</h1>
-      <div className={classes.wrapper}>
-        <VehiclesFilter onGetSearchValue={getSearValueHandler}/>
+      <div>
+        <VehiclesFilter setFilteredVehicles={setFilteredVehicles} />
         <Button>Add Vehicle</Button>
       </div>
-      <VehicleItem filterBy={searchValue} />
+      <VehicleItem filteredVehicles={filteredVehicles} />
     </div>
   );
 };

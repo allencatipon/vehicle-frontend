@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from "react";
-import VehicleService from "../services/VehicleService";
+import React from 'react';
 
 import './VehicleItem.css';
 
-const VehicleItem = (props) => {
-  const [filteredVehicles, setFilteredVehicles] = useState([]);
-  useEffect(() => {
-    console.log("VehicleItem: ",props.filterBy);
-    VehicleService.getVehicle().then((response) => {
-      setFilteredVehicles(response.data);
-    });
-  }, [props.filterBy]);
-
+const VehicleItem = ({ filteredVehicles }) => {
   return (
-    <div className='vehicle-item'>
+    <div className="vehicle-item">
       <table className="table table-striped">
         <thead>
           <tr>
@@ -25,24 +16,23 @@ const VehicleItem = (props) => {
           </tr>
         </thead>
         <tbody>
-        {/* {props.filterBy.length === 0 ? (<p>Choose to Search.</p>) : 
-          (<p>Yes filterBy color.</p>)
-          } */}
-          {filteredVehicles.length === 0 ? (<p>No vehicles found.</p>) : 
-          filteredVehicles.map((motor) => (
-            <tr key={motor.id}>
-              <td> {motor.id}</td>
-              <td> {motor.variant}</td>
-              <td> {motor.brand}</td>
-              <td> {motor.color}</td>
-              <td> {motor.engineCapacity}</td>
-            </tr>
-          ))
-          }
+          {filteredVehicles.length === 0 ? (
+            <p>No vehicles found.</p>
+          ) : (
+            filteredVehicles.map((motor) => (
+              <tr key={motor.id}>
+                <td> {motor.id}</td>
+                <td> {motor.variant}</td>
+                <td> {motor.brand}</td>
+                <td> {motor.color}</td>
+                <td> {motor.engineCapacity}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
   );
-}
+};
 
 export default VehicleItem;
