@@ -14,9 +14,9 @@ const Vehicles = (props) => {
 
   const getSearValueHandler = (enteredSearchValue) =>{
     searchValue = {
-      ...enteredSearchValue, id: Math.random().toString()
+      ...enteredSearchValue
     };
-    console.log(searchValue);
+    console.log("Vehicles: ", searchValue);
   }
 
   return (

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import Button from '../ui/Button';
+import VehicleItem from './VehicleItem';
 
 import './VehiclesFilter.css';
 
@@ -25,7 +26,6 @@ const VehiclesFilter = (props) => {
   const searchHandler = (event) => {
     event.preventDefault();
     props.onGetSearchValue(searchValue);
-    // console.log(searchValue);
   };
 
   return (
