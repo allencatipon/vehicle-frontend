@@ -40,10 +40,8 @@ const VehiclesFilter = ({ onClickSearch }) => {
 
   return (
     <div className="vehicles-filter">
+      <span>Filter By:</span>&nbsp;
       <select value={search.searchBy} onChange={filterByChangeHandler}>
-        <option value="" selected disabled hidden>
-          Filter By
-        </option>
         <option value="all">None (Display All)</option>
         <option value="variant">Variant</option>
         <option value="brand">Brand</option>
