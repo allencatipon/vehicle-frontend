@@ -11,7 +11,8 @@ const Vehicles = () => {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const dispatch = useDispatch();
 
-  const filterChangeHandler = selectedVehicle => {
+  const handleVehicle = selectedVehicle => {
+    console.log("selectedVehicle: ", selectedVehicle)
     setFilteredVehicles(selectedVehicle);
   };
 
@@ -34,7 +35,7 @@ const Vehicles = () => {
       {isShowFormModal && <VehicleFormModal isSave ={true} onCancel={onModalCancelHandler}/>}
       <h1 className="text-center"> Vehicle List</h1>
       <div className={classes.wrapper}>
-        <VehiclesFilter selected={filteredVehicles} onChangeFilter={filterChangeHandler} />
+        <VehiclesFilter selected={filteredVehicles} onClickSearch={handleVehicle} />
         <div className={classes.buttonWrapper}>
           <Button onClick={onClickAddButtonHandler}>Add Vehicle</Button>
         </div>

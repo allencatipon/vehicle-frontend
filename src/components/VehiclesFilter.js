@@ -4,7 +4,7 @@ import Button from '../ui/Button';
 
 import './VehiclesFilter.css';
 
-const VehiclesFilter = ({ setFilteredVehicles, selected }) => {
+const VehiclesFilter = ({ onClickSearch }) => {
   const [search, setSearch] = useState({
     searchBy: '',
     searchValue: '',
@@ -24,11 +24,13 @@ const VehiclesFilter = ({ setFilteredVehicles, selected }) => {
     });
   };
 
-  const onClickSearch = async () => {
+  const handleSearch = async () => {
     try {
       setIsLoading(true);
+      console.log("Hello:", search);
       const data = await VehicleService.getVehicle(search);
-      setFilteredVehicles(data || []);
+      console.log("Hi:", data);
+      onClickSearch(data || []);
     } catch (err) {
       // TODO: handle error here
     } finally {
@@ -38,7 +40,7 @@ const VehiclesFilter = ({ setFilteredVehicles, selected }) => {
 
   return (
     <div className="vehicles-filter">
-      <select value={selected} onChange={filterByChangeHandler}>
+      <select value={search.searchBy} onChange={filterByChangeHandler}>
         <option value="" selected disabled hidden>
           Filter By
         </option>
@@ -49,7 +51,7 @@ const VehiclesFilter = ({ setFilteredVehicles, selected }) => {
         <option value="engineCapacity">Engine Capacity (cc)</option>
       </select>
       <input type="text" id="searchValue" onChange={searchTextChangeHandler} />
-      <Button disabled={isLoading} onClick={onClickSearch}>
+      <Button disabled={isLoading} onClick={handleSearch}>
         {isLoading ? 'Loading' : 'Search'}
       </Button>
     </div>
