@@ -42,6 +42,7 @@ const VehiclesFilter = ({ setFilteredVehicles, selected }) => {
         <option value="" selected disabled hidden>
           Filter By
         </option>
+        <option value="all">None (Display All)</option>
         <option value="variant">Variant</option>
         <option value="brand">Brand</option>
         <option value="color">Color</option>
