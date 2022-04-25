@@ -6,7 +6,7 @@ import './VehiclesFilter.css';
 
 const VehiclesFilter = ({ onClickSearch }) => {
   const [search, setSearch] = useState({
-    searchBy: '',
+    searchBy: 'all',
     searchValue: '',
   });
 
