@@ -6,7 +6,7 @@ import { uiActions } from "../store/ui-slice";
 
 import './VehicleItem.css';
 
-const VehicleItem = ({ filteredVehicles }) => {
+const VehicleItem = ({ filteredVehicles}) => {
   const [selectedVehicle, setSelectedVehicle] = useState({});
 
   const dispatch = useDispatch();

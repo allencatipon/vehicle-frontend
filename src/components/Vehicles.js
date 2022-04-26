@@ -6,10 +6,20 @@ import classes from "./Vehicles.module.css";
 import VehicleFormModal from "./VehicleFormModal";
 import {useDispatch} from 'react-redux';
 import { uiActions } from "../store/ui-slice";
+import VehiclePagination from "./VehiclePagination";
 
 const Vehicles = () => {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const dispatch = useDispatch();
+
+  const [search, setSearch] = useState({
+    searchBy: 'all',
+    searchValue: '',
+    currentPage: 0,
+    recordPerPage: 1,
+    totalElements: 0,
+    totalPages: 0
+  });
 
   const handleVehicle = selectedVehicle => {
     console.log("selectedVehicle: ", selectedVehicle)
@@ -35,13 +45,15 @@ const Vehicles = () => {
       {isShowFormModal && <VehicleFormModal isSave ={true} onCancel={onModalCancelHandler}/>}
       <h1 className="text-center"> Vehicle List</h1>
       <div className={classes.wrapper}>
-        <VehiclesFilter selected={filteredVehicles} onClickSearch={handleVehicle} />
+        <VehiclesFilter selected={filteredVehicles} search={search} setSearch={setSearch} 
+        onClickSearch={handleVehicle} />
         <div className={classes.buttonWrapper}>
           <Button onClick={onClickAddButtonHandler}>Add Vehicle</Button>
         </div>
 
       </div>
       <VehicleItem filteredVehicles={filteredVehicles} />
+      <VehiclePagination search = {search} onClickSearch={handleVehicle} setSearch={setSearch}/>
     </div>
   );
 };
