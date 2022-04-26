@@ -25,7 +25,7 @@ const VehiclesFilter = ({ onClickSearch, search, setSearch }) => {
       setIsLoading(true);
       let currentPage = 0;
       console.log("Hello:", search);
-      const data = await VehicleService.getVehicle(search, currentPage);
+      const data = await VehicleService.get(search, currentPage);
       console.log("Hi:", data);
       setSearch((prevState) => {
         return { ...prevState, currentPage: data.number + 1, 
