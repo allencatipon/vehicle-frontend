@@ -1,15 +1,57 @@
 import axios from 'axios';
 
-const USERS_REST_API_URL = 'http://localhost:8080/api/vehicle';
+const USERS_REST_API_URL = 'http://localhost:8080/api';
 
 class VehicleService {
-  async getVehicle(data, currentPage) {
-    const response = await axios.get(USERS_REST_API_URL, {
+  constructor() {
+    this.axios = axios.create({
+      baseURL: USERS_REST_API_URL,
+    });
+  }
+  async get(data, currentPage) {
+    const response = await this.axios({
+      method: 'GET',
+      url: '/vehicle',
       params: {
         searchBy: data.searchBy,
         searchValue: data.searchValue,
         page: currentPage,
-        size: data.recordPerPage
+        size: data.recordPerPage,
+      },
+    });
+
+    return response.data;
+  }
+
+  async create(data) {
+    const response = await this.axios({
+      method: 'POST',
+      url: '/vehicle',
+      data,
+    });
+
+    return response.data;
+  }
+
+  async update(vehicleId, data) {
+    const response = await this.axios({
+      method: 'PUT',
+      url: '/vehicle',
+      params: {
+        id: vehicleId,
+      },
+      data,
+    });
+
+    return response.data;
+  }
+
+  async delete(vehicleId) {
+    const response = await this.axios({
+      method: 'DELETE',
+      url: '/vehicle',
+      params: {
+        id: vehicleId,
       },
     });
 

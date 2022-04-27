@@ -20,7 +20,7 @@ const ModalOverlay = (props) => {
 };
 
 const ErrorModal = (props) => {
-  console.log("Hey ");
+  console.log('Hey ');
   return (
     <React.Fragment>
       {ReactDOM.createPortal(
@@ -32,7 +32,7 @@ const ErrorModal = (props) => {
           title={props.title}
           message={props.message}
           onCancel={props.onCancel}
-          children= {props.children}
+          children={props.children}
         />,
         document.getElementById('overlay-root')
       )}

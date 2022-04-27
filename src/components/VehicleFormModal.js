@@ -1,132 +1,158 @@
-import { useEffect } from 'react';
 import FormModal from '../ui/FormModal';
-import useInput from '../hooks/use-input';
+import useForms from '../hooks/useForms';
+import VehicleService from '../shared/services/VehicleService';
+import { useState } from 'react';
 
 const VehicleFormModal = (props) => {
-    console.log(props.vehicle);
-    console.log('Reload Vehicle Form Modal!');
-    const isNotEmpty = value => value.trim() !='';
+  console.log(props.vehicle);
+  console.log('Reload Vehicle Form Modal!');
 
-    let vehicleId = 0;
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-    const {value: variantValue, 
-        isValid: variantIsValid,
-        hasError: variantHasError,
-      valueChangeHandler: variantChangeHandler,
-      inputBlurHandler: variantBlurHandler,
-     reset: resetVariant,
-     setEnteredValue: setVariantValue} = useInput(isNotEmpty);
+  const vehicleId = props.vehicle && !props.isSave ? props.vehicle.id : 0;
+  const isUpdate = Boolean(vehicleId);
+  const { formData, formErrors, hasErrors, handleBlur, handleChange, touchedFields, resetForm } =
+    useForms({
+      variant: props?.vehicle?.variant || '',
+      brand: props?.vehicle?.brand || '',
+      color: props?.vehicle?.color || '',
+      engineCapacity: props?.vehicle?.engineCapacity || '',
+    });
 
-    const {value: brandValue, 
-        isValid: brandIsValid,
-        hasError: brandHasError,
-      valueChangeHandler: brandChangeHandler,
-      inputBlurHandler: brandBlurHandler,
-     reset: resetBrand,
-     setEnteredValue: setBrandValue} = useInput(isNotEmpty);
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    setIsSaving(true);
+    try {
+      if (hasErrors) {
+        alert('Fill up the required fields');
+        return;
+      }
 
-     const {value: colorValue, 
-        isValid: colorIsValid,
-        hasError: colorHasError,
-      valueChangeHandler: colorChangeHandler,
-      inputBlurHandler: colorBlurHandler,
-     reset: resetColor,
-     setEnteredValue: setColorValue} = useInput(isNotEmpty);
+      setIsLoading(true);
 
-     const {value: engineCapacityValue, 
-        isValid: engineCapacityIsValid,
-        hasError: engineCapacityHasError,
-      valueChangeHandler: engineCapacityChangeHandler,
-      inputBlurHandler: engineCapacityBlurHandler,
-     reset: resetEngineCapacity,
-     setEnteredValue: setEngineCapacityValue} = useInput(isNotEmpty);
+      if (vehicleId) {
+        await VehicleService.update(vehicleId, formData);
+      } else {
+        console.log('formData', formData);
+        await VehicleService.create(formData);
+      }
 
-     let formIsValid = false;
-
-     if(variantIsValid, brandIsValid, colorIsValid, engineCapacityIsValid) {
-        formIsValid = true;
-     }
-
-     useEffect(() => {
-        if(props.vehicle && !props.isSave) {
-            setVariantValue(props.vehicle.variant);
-            setBrandValue(props.vehicle.brand);
-            setColorValue(props.vehicle.color);
-            setEngineCapacityValue(props.vehicle.engineCapacity);
-        }
-        }, [setVariantValue, setBrandValue, setColorValue, setEngineCapacityValue]);
-
-     if(props.vehicle && !props.isSave) {
-        vehicleId = props.vehicle.id;
-     }
-
-    const onSubmitHandler = (event) => {
-        event.preventDefault();
-
-        if(!formIsValid) {
-            return;
-        }
-
-        console.log("Submitted!");
+      handleCancel();
+    } catch (err) {
+      // TODO: handle api errors
+    } finally {
+      setIsLoading(false);
+      setIsSaving(false);
     }
+  };
 
-    const idClasses = 'form-control row';
-    const variantClasses = brandHasError? 'form-control row invalid': 'form-control row';
-    const brandClasses = brandHasError? 'form-control row invalid': 'form-control row';
-    const colorClasses = colorHasError? 'form-control row invalid': 'form-control row';
-    const engineCapacityClasses = engineCapacityHasError? 'form-control row invalid': 'form-control row';
+  const handleCancel = () => {
+    props.onCancel();
+    resetForm();
+    setIsLoading(false);
+    setIsSaving(false);
+  };
 
-    return <FormModal onSubmit = {onSubmitHandler} 
-        title = {props.isSave? 'Add Vehicle' : 'Update Vehicle'} 
-        submitLabel={props.isSave? 'SAVE' : 'UPDATE'} 
-        onCancel = {props.onCancel}
-        formIsValid = {formIsValid}>
-            <div className='control-group'>
-            {!props.isSave && (<div className={idClasses}>
-                    <div className='column'><label>ID</label></div>
-                    <div className='column'><p className='idlabel'>{vehicleId}</p></div>
-                </div>)}
-
-            <div className={variantClasses}>
-                    <div className='column'><label htmlFor='variant'>Variant</label></div>
-                    <div className='column'>
-                    <select value={variantValue}
-                    onChange={variantChangeHandler} 
-                    onBlur={variantBlurHandler}>
-                        <option value='Car'>Car</option>
-                        <option value='Motorcycle'>Motorcycle</option>
-                    </select></div>
-                </div>
-                {variantHasError && <p>Please enter a Variant.</p>}
-
-                <div className={brandClasses}>
-                    <div className='column'><label htmlFor='brand'>Brand</label></div>
-                    <div className='column'><input type="text" id="brand"
-                    value={brandValue}
-                    onChange={brandChangeHandler}
-                    onBlur={brandBlurHandler}/></div>
-                </div>
-                {brandHasError && <p>Please enter a brand.</p>}
-
-                <div className={colorClasses}>
-                <div className='column'><label htmlFor='brand'>Color</label></div>
-                <div className='column'><input type="text" id="color"
-                    value={colorValue}
-                    onChange={colorChangeHandler}
-                    onBlur={colorBlurHandler}/></div>
-                </div>
-                {colorHasError && <p>Please enter a color.</p>}
-
-                <div className={engineCapacityClasses}>
-                <div className='column'><label htmlFor='engine capacity'>Engine Capacity</label></div>
-                <div className='column'><input type="text" id="engineCapacity"
-                    value={engineCapacityValue}
-                    onChange={engineCapacityChangeHandler}
-                    onBlur={engineCapacityBlurHandler}/></div>
-                </div>
-                {engineCapacityHasError && <p>Please enter an Engine Capacity.</p>}
+  return (
+    <FormModal
+      onSubmit={onSubmitHandler}
+      title={props.isSave ? 'Add Vehicle' : 'Update Vehicle'}
+      submitLabel={props.isSave ? 'SAVE' : 'UPDATE'}
+      onCancel={handleCancel}
+      disableSubmit={isLoading || (isSaving && hasErrors)}
+    >
+      <div className="control-group">
+        {!props.isSave && (
+          <div className={'form-control row'}>
+            <div className="column">
+              <label>ID</label>
             </div>
+            <div className="column">
+              <p className="idlabel">{vehicleId}</p>
+            </div>
+          </div>
+        )}
+
+        <div className={`form-control row ${isSaving && formErrors.variant ? 'invalid' : ''}`}>
+          <div className="column">
+            <label htmlFor="variant">Variant</label>
+          </div>
+          <div className="column">
+            <select
+              name="variant"
+              value={formData.variant}
+              onChange={handleChange}
+              onBlur={() => handleBlur('variant')}
+              disabled={isUpdate}
+            >
+              <option value="" disabled>
+                Select a variant
+              </option>
+              <option value="Car">Car</option>
+              <option value="Motorcycle">Motorcycle</option>
+            </select>
+          </div>
+        </div>
+        {formErrors.variant && touchedFields.variant && <p>Please enter a Variant.</p>}
+
+        <div className={`form-control row ${isSaving && formErrors.brand ? 'invalid' : ''}`}>
+          <div className="column">
+            <label htmlFor="brand">Brand</label>
+          </div>
+          <div className="column">
+            <input
+              type="text"
+              id="brand"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              onBlur={() => handleBlur('brand')}
+            />
+          </div>
+        </div>
+        {formErrors.brand && touchedFields.brand && <p>Please enter a brand.</p>}
+
+        <div className={`form-control row ${isSaving && formErrors.color ? 'invalid' : ''}`}>
+          <div className="column">
+            <label htmlFor="brand">Color</label>
+          </div>
+          <div className="column">
+            <input
+              type="text"
+              id="color"
+              name="color"
+              value={formData.color}
+              onChange={handleChange}
+              onBlur={() => handleBlur('color')}
+            />
+          </div>
+        </div>
+        {formErrors.color && touchedFields.color && <p>Please enter a color.</p>}
+
+        <div
+          className={`form-control row ${isSaving && formErrors.engineCapacity ? 'invalid' : ''}`}
+        >
+          <div className="column">
+            <label htmlFor="engine capacity">Engine Capacity</label>
+          </div>
+          <div className="column">
+            <input
+              type="text"
+              id="engineCapacity"
+              name="engineCapacity"
+              value={formData.engineCapacity}
+              onChange={handleChange}
+              onBlur={() => handleBlur('engineCapacity')}
+            />
+          </div>
+        </div>
+        {formErrors.engineCapacity && touchedFields.engineCapacity && (
+          <p>Please enter an Engine Capacity.</p>
+        )}
+      </div>
     </FormModal>
-}
+  );
+};
 
 export default VehicleFormModal;
