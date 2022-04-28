@@ -1,15 +1,11 @@
-import { useState } from 'react';
 import VehicleService from '../shared/services/VehicleService';
 
 const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
   const { currentPage, recordPerPage, totalElements, totalPages } = search;
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const getBooksByPagination = async (currentPage) => {
     currentPage = currentPage - 1;
     try {
-      setIsLoading(true);
       console.log('Hello:', search);
       const data = await VehicleService.get(search, currentPage);
       console.log('Hi:', data.content);
@@ -25,7 +21,6 @@ const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
     } catch (err) {
       // TODO: handle error here
     } finally {
-      setIsLoading(false);
     }
   };
 

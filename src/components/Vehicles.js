@@ -21,7 +21,7 @@ const Vehicles = () => {
     totalPages: 0,
   });
 
-  const handleVehicle = (selectedVehicle) => {
+  const onClickSearch = (selectedVehicle) => {
     console.log('selectedVehicle: ', selectedVehicle);
     setFilteredVehicles(selectedVehicle);
   };
@@ -49,18 +49,13 @@ const Vehicles = () => {
       )}
       <h1 className="text-center"> Vehicle List</h1>
       <div className={classes.wrapper}>
-        <VehiclesFilter
-          selected={filteredVehicles}
-          search={search}
-          setSearch={setSearch}
-          onClickSearch={handleVehicle}
-        />
+        <VehiclesFilter search={search} setSearch={setSearch} onClickSearch={onClickSearch} />
         <div className={classes.buttonWrapper}>
           <Button onClick={onClickAddButtonHandler}>Add Vehicle</Button>
         </div>
       </div>
       <VehicleItem filteredVehicles={filteredVehicles} />
-      <VehiclePagination search={search} onClickSearch={handleVehicle} setSearch={setSearch} />
+      <VehiclePagination search={search} setSearch={setSearch} onClickSearch={onClickSearch} />
     </div>
   );
 };
