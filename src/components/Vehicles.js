@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import VehicleItem from './VehicleItem';
 import VehiclesFilter from './VehiclesFilter';
 import Button from '../ui/Button';
@@ -21,8 +21,7 @@ const Vehicles = () => {
     totalPages: 0,
   });
 
-  const onClickSearch = (selectedVehicle) => {
-    console.log('selectedVehicle: ', selectedVehicle);
+  const handleVehicle = (selectedVehicle) => {
     setFilteredVehicles(selectedVehicle);
   };
 
@@ -54,8 +53,13 @@ const Vehicles = () => {
           <Button onClick={onClickAddButtonHandler}>Add Vehicle</Button>
         </div>
       </div>
-      <VehicleItem filteredVehicles={filteredVehicles} />
-      <VehiclePagination search={search} setSearch={setSearch} onClickSearch={onClickSearch} />
+      <VehicleItem
+        filteredVehicles={filteredVehicles}
+        setFilteredVehicles={setFilteredVehicles}
+        search={search}
+        setSearch={setSearch}
+      />
+      <VehiclePagination search={search} onClickSearch={handleVehicle} setSearch={setSearch} />
     </div>
   );
 };

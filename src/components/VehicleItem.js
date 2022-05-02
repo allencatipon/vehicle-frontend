@@ -7,7 +7,12 @@ import { uiActions } from '../store/ui-slice';
 import './VehicleItem.css';
 import VehicleService from '../shared/services/VehicleService';
 
-const VehicleItem = ({ filteredVehicles }) => {
+const VehicleItem = ({
+  filteredVehicles,
+  setSelectedVehicle: setVehiclesList,
+  search,
+  setSearch,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState({});
 
@@ -62,6 +67,9 @@ const VehicleItem = ({ filteredVehicles }) => {
           isSave={false}
           vehicle={selectedVehicle}
           onCancel={onModalCancelHandler}
+          setFilteredVehicles={setVehiclesList}
+          search={search}
+          setSearch={setSearch}
         />
       )}
       <div className="vehicle-item">

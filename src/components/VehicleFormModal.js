@@ -3,21 +3,25 @@ import useForms from '../hooks/useForms';
 import VehicleService from '../shared/services/VehicleService';
 import { useState } from 'react';
 
-const VehicleFormModal = (props) => {
-  console.log(props.vehicle);
-  console.log('Reload Vehicle Form Modal!');
-
+const VehicleFormModal = ({
+  isSave,
+  vehicle = {},
+  search = {},
+  onCancel,
+  setFilteredVehicles = () => {},
+  setSearch = () => {},
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const vehicleId = props.vehicle && !props.isSave ? props.vehicle.id : 0;
+  const vehicleId = vehicle && !isSave ? vehicle.id : 0;
   const isUpdate = Boolean(vehicleId);
   const { formData, formErrors, hasErrors, handleBlur, handleChange, touchedFields, resetForm } =
     useForms({
-      variant: props?.vehicle?.variant || '',
-      brand: props?.vehicle?.brand || '',
-      color: props?.vehicle?.color || '',
-      engineCapacity: props?.vehicle?.engineCapacity || '',
+      variant: vehicle?.variant || '',
+      brand: vehicle?.brand || '',
+      color: vehicle?.color || '',
+      engineCapacity: vehicle?.engineCapacity || '',
     });
 
   const onSubmitHandler = async (event) => {
@@ -37,9 +41,22 @@ const VehicleFormModal = (props) => {
         console.log('formData', formData);
         await VehicleService.create(formData);
       }
-
+      console.log(' search', search);
+      const vehicles = await VehicleService.get(search, search?.currentPage);
+      console.log('vehicles', vehicles);
+      setSearch((prevState) => {
+        console.log('prevState', prevState);
+        return {
+          ...prevState,
+          currentPage: vehicles.number + 1,
+          totalPages: vehicles.totalPages,
+          totalElements: vehicles.totalElements,
+        };
+      });
+      setFilteredVehicles(vehicles.content);
       handleCancel();
     } catch (err) {
+      console.log('err', err);
       // TODO: handle api errors
     } finally {
       setIsLoading(false);
@@ -48,7 +65,7 @@ const VehicleFormModal = (props) => {
   };
 
   const handleCancel = () => {
-    props.onCancel();
+    onCancel();
     resetForm();
     setIsLoading(false);
     setIsSaving(false);
@@ -57,13 +74,13 @@ const VehicleFormModal = (props) => {
   return (
     <FormModal
       onSubmit={onSubmitHandler}
-      title={props.isSave ? 'Add Vehicle' : 'Update Vehicle'}
-      submitLabel={props.isSave ? 'SAVE' : 'UPDATE'}
+      title={isSave ? 'Add Vehicle' : 'Update Vehicle'}
+      submitLabel={isSave ? 'SAVE' : 'UPDATE'}
       onCancel={handleCancel}
       disableSubmit={isLoading || (isSaving && hasErrors)}
     >
       <div className="control-group">
-        {!props.isSave && (
+        {!isSave && (
           <div className={'form-control row'}>
             <div className="column">
               <label>ID</label>

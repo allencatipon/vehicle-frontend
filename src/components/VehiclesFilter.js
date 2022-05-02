@@ -5,7 +5,6 @@ import Button from '../ui/Button';
 import './VehiclesFilter.css';
 
 const VehiclesFilter = ({ onClickSearch, search, setSearch }) => {
-
   const [isLoading, setIsLoading] = useState(false);
 
   const filterByChangeHandler = (event) => {
@@ -24,12 +23,16 @@ const VehiclesFilter = ({ onClickSearch, search, setSearch }) => {
     try {
       setIsLoading(true);
       let currentPage = 0;
-      console.log("Hello:", search);
+      console.log('handleSearch:', search);
       const data = await VehicleService.get(search, currentPage);
-      console.log("Hi:", data);
+      console.log('handleSearch:', data);
       setSearch((prevState) => {
-        return { ...prevState, currentPage: data.number + 1, 
-          totalPages:data.totalPages, totalElements: data.totalElements};
+        return {
+          ...prevState,
+          currentPage: data.number + 1,
+          totalPages: data.totalPages,
+          totalElements: data.totalElements,
+        };
       });
       onClickSearch(data.content || []);
     } catch (err) {

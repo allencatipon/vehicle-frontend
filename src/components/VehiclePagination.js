@@ -6,9 +6,10 @@ const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
   const getBooksByPagination = async (currentPage) => {
     currentPage = currentPage - 1;
     try {
-      console.log('Hello:', search);
+      // setIsLoading(true);
+      console.log('getBooksByPagination:', search);
       const data = await VehicleService.get(search, currentPage);
-      console.log('Hi:', data.content);
+      console.log('getBooksByPagination:', data.content);
       setSearch((prevState) => {
         return {
           ...prevState,
