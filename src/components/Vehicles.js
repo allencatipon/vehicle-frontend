@@ -23,10 +23,10 @@ const Vehicles = () => {
     totalPages: 0,
   });
 
-  const handleVehicle = (selectedVehicle) => {
-    console.log('selectedVehicle: ', selectedVehicle);
-    setFilteredVehicles(selectedVehicle);
-  };
+  // const handleVehicle = (selectedVehicle) => {
+  //   console.log('selectedVehicle: ', selectedVehicle);
+  //   setFilteredVehicles(selectedVehicle);
+  // };
 
   const [isShowFormModal, setIsShowFormModal] = useState(false);
   const onModalCancelHandler = () => {
@@ -58,7 +58,8 @@ const Vehicles = () => {
           totalElements: data.totalElements,
         };
       });
-      handleVehicle(data.content || []);
+      setFilteredVehicles([...filteredVehicles, ...data.content]);
+      // handleVehicle(data.content || []);
     } catch (err) {
       // TODO: handle error here
     } finally {
