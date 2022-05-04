@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import VehicleItem from './VehicleItem';
 import VehiclesFilter from './VehiclesFilter';
 import Button from '../ui/Button';
 import classes from './Vehicles.module.css';
 import VehicleFormModal from './VehicleFormModal';
-import { useDispatch } from 'react-redux';
-import { uiActions } from '../store/ui-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { uiActions } from '../shared/store/UiSlice';
+import { vehicleActions } from '../shared/store/VehicleSlice';
 import VehiclePagination from './VehiclePagination';
+import VehicleService from '../shared/services/VehicleService';
 
 const Vehicles = () => {
-  const [filteredVehicles, setFilteredVehicles] = useState([]);
   const dispatch = useDispatch();
 
-  const [search, setSearch] = useState({
-    searchBy: 'all',
-    searchValue: '',
-    currentPage: 0,
-    recordPerPage: 5,
-    totalElements: 0,
-    totalPages: 0,
-  });
+  const query = useSelector((state) => state.vehicles.query);
 
-  const handleVehicle = (selectedVehicle) => {
-    console.log('selectedVehicle: ', selectedVehicle);
-    setFilteredVehicles(selectedVehicle);
-  };
+  // const handleVehicle = (selectedVehicle) => {
+  //   console.log('selectedVehicle: ', selectedVehicle);
+  //   setFilteredVehicles(selectedVehicle);
+  // };
 
   const [isShowFormModal, setIsShowFormModal] = useState(false);
   const onModalCancelHandler = () => {
@@ -42,6 +36,18 @@ const Vehicles = () => {
     setIsShowFormModal(true);
   };
 
+  const getBooksByPagination = async (currentPage) => {
+    try {
+      // setIsLoading(true);
+      const data = await VehicleService.get(query);
+      dispatch(vehicleActions.setRecords(data.content));
+    } catch (err) {
+      // TODO: handle error here
+    } finally {
+      // setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       {isShowFormModal && (
@@ -49,18 +55,13 @@ const Vehicles = () => {
       )}
       <h1 className="text-center"> Vehicle List</h1>
       <div className={classes.wrapper}>
-        <VehiclesFilter
-          selected={filteredVehicles}
-          search={search}
-          setSearch={setSearch}
-          onClickSearch={handleVehicle}
-        />
+        <VehiclesFilter getBooksByPagination={getBooksByPagination} />
         <div className={classes.buttonWrapper}>
           <Button onClick={onClickAddButtonHandler}>Add Vehicle</Button>
         </div>
       </div>
-      <VehicleItem filteredVehicles={filteredVehicles} />
-      <VehiclePagination search={search} onClickSearch={handleVehicle} setSearch={setSearch} />
+      <VehicleItem />
+      <VehiclePagination getBooksByPagination={getBooksByPagination} />
     </div>
   );
 };

@@ -1,33 +1,9 @@
-import { useState } from 'react';
-import VehicleService from '../shared/services/VehicleService';
+import { useSelector } from 'react-redux';
 
-const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
-  const { currentPage, recordPerPage, totalElements, totalPages } = search;
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getBooksByPagination = async (currentPage) => {
-    currentPage = currentPage - 1;
-    try {
-      setIsLoading(true);
-      console.log('Hello:', search);
-      const data = await VehicleService.get(search, currentPage);
-      console.log('Hi:', data.content);
-      setSearch((prevState) => {
-        return {
-          ...prevState,
-          currentPage: data.number + 1,
-          totalPages: data.totalPages,
-          totalElements: data.totalElements,
-        };
-      });
-      onClickSearch(data.content || []);
-    } catch (err) {
-      // TODO: handle error here
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const VehiclePagination = ({ getBooksByPagination }) => {
+  const { currentPage, recordPerPage, totalElements, totalPages } = useSelector(
+    (state) => state.vehicles.query
+  );
 
   const showNextPage = () => {
     if (currentPage < Math.ceil(totalElements / recordPerPage)) {
@@ -68,7 +44,7 @@ const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === 1 ? true : false}
+                disabled={currentPage === 1}
                 onClick={showFirstPage}
               >
                 First
@@ -78,7 +54,7 @@ const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === 1 ? true : false}
+                disabled={currentPage === 1}
                 onClick={showPrevPage}
               >
                 Previous
@@ -88,7 +64,7 @@ const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === totalPages ? true : false}
+                disabled={currentPage === totalPages}
                 onClick={showNextPage}
               >
                 Next
@@ -98,7 +74,7 @@ const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === totalPages ? true : false}
+                disabled={currentPage === totalPages}
                 onClick={showLastPage}
               >
                 Last

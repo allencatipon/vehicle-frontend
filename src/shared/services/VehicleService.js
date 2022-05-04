@@ -8,14 +8,14 @@ class VehicleService {
       baseURL: USERS_REST_API_URL,
     });
   }
-  async get(data, currentPage) {
+  async get(data) {
     const response = await this.axios({
       method: 'GET',
       url: '/vehicle',
       params: {
         searchBy: data.searchBy,
         searchValue: data.searchValue,
-        page: currentPage,
+        page: data.currentPage,
         size: data.recordPerPage,
       },
     });
