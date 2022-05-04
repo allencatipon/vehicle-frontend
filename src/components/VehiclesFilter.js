@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-import VehicleService from '../shared/services/VehicleService';
+import React from 'react';
 import Button from '../ui/Button';
 
 import './VehiclesFilter.css';
 
-const VehiclesFilter = ({ onClickSearch, search, setSearch }) => {
-
-  const [isLoading, setIsLoading] = useState(false);
-
+const VehiclesFilter = ({ search, setSearch, getBooksByPagination }) => {
   const filterByChangeHandler = (event) => {
     setSearch((prevState) => {
       return { ...prevState, searchBy: event.target.value };
@@ -18,25 +14,6 @@ const VehiclesFilter = ({ onClickSearch, search, setSearch }) => {
     setSearch((prevState) => {
       return { ...prevState, searchValue: event.target.value };
     });
-  };
-
-  const handleSearch = async () => {
-    try {
-      setIsLoading(true);
-      let currentPage = 0;
-      console.log("Hello:", search);
-      const data = await VehicleService.get(search, currentPage);
-      console.log("Hi:", data);
-      setSearch((prevState) => {
-        return { ...prevState, currentPage: data.number + 1, 
-          totalPages:data.totalPages, totalElements: data.totalElements};
-      });
-      onClickSearch(data.content || []);
-    } catch (err) {
-      // TODO: handle error here
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -50,9 +27,7 @@ const VehiclesFilter = ({ onClickSearch, search, setSearch }) => {
         <option value="engineCapacity">Engine Capacity (cc)</option>
       </select>
       <input type="text" id="searchValue" onChange={searchTextChangeHandler} />
-      <Button disabled={isLoading} onClick={handleSearch}>
-        {isLoading ? 'Loading' : 'Search'}
-      </Button>
+      <Button onClick={getBooksByPagination}>Search</Button>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import VehicleFormModal from './VehicleFormModal';
 import { useDispatch } from 'react-redux';
 import { uiActions } from '../store/ui-slice';
 import VehiclePagination from './VehiclePagination';
+import VehicleService from '../shared/services/VehicleService';
 
 const Vehicles = () => {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
@@ -42,6 +43,29 @@ const Vehicles = () => {
     setIsShowFormModal(true);
   };
 
+  const getBooksByPagination = async (currentPage) => {
+    currentPage = currentPage - 1;
+    try {
+      // setIsLoading(true);
+      console.log('Pagination, currentPage', currentPage);
+      const data = await VehicleService.get(search, currentPage);
+      setSearch((prevState) => {
+        return {
+          ...prevState,
+          currentPage: data.number + 1,
+          totalPages: data.totalPages,
+          totalElements: data.totalElements,
+        };
+      });
+      console.log('After page:', currentPage);
+      handleVehicle(data.content || []);
+    } catch (err) {
+      // TODO: handle error here
+    } finally {
+      // setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       {isShowFormModal && (
@@ -50,17 +74,21 @@ const Vehicles = () => {
       <h1 className="text-center"> Vehicle List</h1>
       <div className={classes.wrapper}>
         <VehiclesFilter
-          selected={filteredVehicles}
           search={search}
           setSearch={setSearch}
-          onClickSearch={handleVehicle}
+          getBooksByPagination={getBooksByPagination}
         />
         <div className={classes.buttonWrapper}>
           <Button onClick={onClickAddButtonHandler}>Add Vehicle</Button>
         </div>
       </div>
       <VehicleItem filteredVehicles={filteredVehicles} />
-      <VehiclePagination search={search} onClickSearch={handleVehicle} setSearch={setSearch} />
+      <VehiclePagination
+        search={search}
+        onClickSearch={handleVehicle}
+        setSearch={setSearch}
+        getBooksByPagination={getBooksByPagination}
+      />
     </div>
   );
 };

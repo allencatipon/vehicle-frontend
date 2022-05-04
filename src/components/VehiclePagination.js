@@ -1,33 +1,5 @@
-import { useState } from 'react';
-import VehicleService from '../shared/services/VehicleService';
-
-const VehiclePagination = ({ search, setSearch, onClickSearch }) => {
+const VehiclePagination = ({ search, setSearch, onClickSearch, getBooksByPagination }) => {
   const { currentPage, recordPerPage, totalElements, totalPages } = search;
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getBooksByPagination = async (currentPage) => {
-    currentPage = currentPage - 1;
-    try {
-      setIsLoading(true);
-      console.log('Hello:', search);
-      const data = await VehicleService.get(search, currentPage);
-      console.log('Hi:', data.content);
-      setSearch((prevState) => {
-        return {
-          ...prevState,
-          currentPage: data.number + 1,
-          totalPages: data.totalPages,
-          totalElements: data.totalElements,
-        };
-      });
-      onClickSearch(data.content || []);
-    } catch (err) {
-      // TODO: handle error here
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const showNextPage = () => {
     if (currentPage < Math.ceil(totalElements / recordPerPage)) {
