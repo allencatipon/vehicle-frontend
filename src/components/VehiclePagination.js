@@ -1,4 +1,4 @@
-const VehiclePagination = ({ search, setSearch, onClickSearch, getBooksByPagination }) => {
+const VehiclePagination = ({ search, getBooksByPagination }) => {
   const { currentPage, recordPerPage, totalElements, totalPages } = search;
 
   const showNextPage = () => {

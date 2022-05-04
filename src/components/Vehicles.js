@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import VehicleItem from './VehicleItem';
 import VehiclesFilter from './VehiclesFilter';
 import Button from '../ui/Button';
@@ -11,6 +11,7 @@ import VehicleService from '../shared/services/VehicleService';
 
 const Vehicles = () => {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
+  const [autoRefresh, setAutoRefresh] = useState([]);
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState({
@@ -57,7 +58,6 @@ const Vehicles = () => {
           totalElements: data.totalElements,
         };
       });
-      console.log('After page:', currentPage);
       handleVehicle(data.content || []);
     } catch (err) {
       // TODO: handle error here
@@ -83,12 +83,7 @@ const Vehicles = () => {
         </div>
       </div>
       <VehicleItem filteredVehicles={filteredVehicles} />
-      <VehiclePagination
-        search={search}
-        onClickSearch={handleVehicle}
-        setSearch={setSearch}
-        getBooksByPagination={getBooksByPagination}
-      />
+      <VehiclePagination search={search} getBooksByPagination={getBooksByPagination} />
     </div>
   );
 };
