@@ -2,13 +2,16 @@ import FormModal from '../ui/FormModal';
 import useForms from '../hooks/useForms';
 import VehicleService from '../shared/services/VehicleService';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { vehicleActions } from '../shared/store/VehicleSlice';
 
 const VehicleFormModal = (props) => {
-  console.log(props.vehicle);
-  console.log('Reload Vehicle Form Modal!');
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const query = useSelector((state) => state.vehicles.query);
 
   const vehicleId = props.vehicle && !props.isSave ? props.vehicle.id : 0;
   const isUpdate = Boolean(vehicleId);
@@ -37,6 +40,9 @@ const VehicleFormModal = (props) => {
         console.log('formData', formData);
         await VehicleService.create(formData);
       }
+
+      const data = await VehicleService.get(query);
+      dispatch(vehicleActions.setRecords(data.content));
 
       handleCancel();
     } catch (err) {

@@ -1,5 +1,9 @@
-const VehiclePagination = ({ search, getBooksByPagination }) => {
-  const { currentPage, recordPerPage, totalElements, totalPages } = search;
+import { useSelector } from 'react-redux';
+
+const VehiclePagination = ({ getBooksByPagination }) => {
+  const { currentPage, recordPerPage, totalElements, totalPages } = useSelector(
+    (state) => state.vehicles.query
+  );
 
   const showNextPage = () => {
     if (currentPage < Math.ceil(totalElements / recordPerPage)) {
@@ -40,7 +44,7 @@ const VehiclePagination = ({ search, getBooksByPagination }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === 1 ? true : false}
+                disabled={currentPage === 1}
                 onClick={showFirstPage}
               >
                 First
@@ -50,7 +54,7 @@ const VehiclePagination = ({ search, getBooksByPagination }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === 1 ? true : false}
+                disabled={currentPage === 1}
                 onClick={showPrevPage}
               >
                 Previous
@@ -60,7 +64,7 @@ const VehiclePagination = ({ search, getBooksByPagination }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === totalPages ? true : false}
+                disabled={currentPage === totalPages}
                 onClick={showNextPage}
               >
                 Next
@@ -70,7 +74,7 @@ const VehiclePagination = ({ search, getBooksByPagination }) => {
               <a
                 type="button"
                 class="page-link"
-                disabled={currentPage === totalPages ? true : false}
+                disabled={currentPage === totalPages}
                 onClick={showLastPage}
               >
                 Last

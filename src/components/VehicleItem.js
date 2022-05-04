@@ -1,15 +1,19 @@
 import React, { useState, Fragment } from 'react';
 import UpdateDeleteActionButtons from '../ui/UpdateDeleteActionButtons';
 import VehicleFormModal from './VehicleFormModal';
-import { useDispatch } from 'react-redux';
-import { uiActions } from '../store/ui-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { uiActions } from '../shared/store/UiSlice';
 
 import './VehicleItem.css';
 import VehicleService from '../shared/services/VehicleService';
+import { vehicleActions } from '../shared/store/VehicleSlice';
 
-const VehicleItem = ({ filteredVehicles }) => {
+const VehicleItem = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState({});
+
+  const vehicles = useSelector((state) => state.vehicles.records);
+  const query = useSelector((state) => state.vehicles.query);
 
   const dispatch = useDispatch();
   const [isShowEditFormModal, setIsShowEditFormModal] = useState(false);
@@ -25,8 +29,9 @@ const VehicleItem = ({ filteredVehicles }) => {
     );
   };
 
-  const updateVehicle = (vehicle) => {
+  const updateVehicle = async (vehicle) => {
     console.log('Update Vehicle with ID: ', vehicle.id);
+
     setSelectedVehicle(vehicle);
     setIsShowEditFormModal(true);
   };
@@ -41,6 +46,9 @@ const VehicleItem = ({ filteredVehicles }) => {
       setIsLoading(true);
 
       await VehicleService.delete(vehicle.id);
+
+      // Refetch updated vehicle list
+      const data = await VehicleService.get(query);
       dispatch(
         uiActions.showNotification({
           status: 'success',
@@ -48,6 +56,7 @@ const VehicleItem = ({ filteredVehicles }) => {
           message: 'Vehicle deleted successfully!',
         })
       );
+      dispatch(vehicleActions.setRecords(data.content));
     } catch (err) {
       // TODO: handle api errors
     } finally {
@@ -77,10 +86,10 @@ const VehicleItem = ({ filteredVehicles }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredVehicles.length === 0 ? (
+            {vehicles.length === 0 ? (
               <p>No vehicles found.</p>
             ) : (
-              filteredVehicles.map((vehicle) => (
+              vehicles.map((vehicle) => (
                 <tr key={vehicle.id}>
                   <td> {vehicle.id}</td>
                   <td> {vehicle.variant}</td>
