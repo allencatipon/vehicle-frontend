@@ -6,9 +6,8 @@ import { uiActions } from '../shared/store/UiSlice';
 
 import './VehicleItem.css';
 import VehicleService from '../shared/services/VehicleService';
-import { vehicleActions } from '../shared/store/VehicleSlice';
 
-const VehicleItem = () => {
+const VehicleItem = ({ getBooksByPagination }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState({});
 
@@ -46,9 +45,8 @@ const VehicleItem = () => {
       setIsLoading(true);
 
       await VehicleService.delete(vehicle.id);
+      await getBooksByPagination(query);
 
-      // Refetch updated vehicle list
-      const data = await VehicleService.get(query);
       dispatch(
         uiActions.showNotification({
           status: 'success',
@@ -56,7 +54,6 @@ const VehicleItem = () => {
           message: 'Vehicle deleted successfully!',
         })
       );
-      dispatch(vehicleActions.setRecords(data.content));
     } catch (err) {
       // TODO: handle api errors
     } finally {
@@ -71,6 +68,7 @@ const VehicleItem = () => {
           isSave={false}
           vehicle={selectedVehicle}
           onCancel={onModalCancelHandler}
+          getBooksByPagination={getBooksByPagination}
         />
       )}
       <div className="vehicle-item">
