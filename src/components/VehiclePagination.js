@@ -1,33 +1,41 @@
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 const VehiclePagination = ({ getBooksByPagination }) => {
-  const { currentPage, recordPerPage, totalElements, totalPages } = useSelector(
-    (state) => state.vehicles.query
-  );
+  const query = useSelector((state) => state.vehicles.query);
+  const { currentPage, totalPages } = useSelector((state) => state.vehicles.query);
 
-  const showNextPage = () => {
-    if (currentPage < Math.ceil(totalElements / recordPerPage)) {
-      getBooksByPagination(currentPage + 1);
+  const showNextPage = useCallback(() => {
+    const nextPage = currentPage + 1;
+    if (totalPages >= nextPage) {
+      getBooksByPagination({
+        ...query,
+        currentPage: nextPage,
+      });
     }
-  };
+  }, [currentPage, getBooksByPagination, query, totalPages]);
 
   const showLastPage = () => {
-    if (currentPage < Math.ceil(totalElements / recordPerPage)) {
-      getBooksByPagination(Math.ceil(totalElements / recordPerPage));
-    }
+    getBooksByPagination({
+      ...query,
+      currentPage: totalPages,
+    });
   };
 
   const showFirstPage = () => {
-    let firstPage = 1;
-    if (currentPage > firstPage) {
-      getBooksByPagination(firstPage);
-    }
+    getBooksByPagination({
+      ...query,
+      currentPage: 1,
+    });
   };
 
   const showPrevPage = () => {
-    let prevPage = 1;
-    if (currentPage > prevPage) {
-      getBooksByPagination(currentPage - prevPage);
+    const prevPage = currentPage - 1;
+    if (prevPage >= 1) {
+      getBooksByPagination({
+        ...query,
+        currentPage: prevPage,
+      });
     }
   };
 
